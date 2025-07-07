@@ -176,7 +176,7 @@ fn resolve_npm_protocol_alias() {
 fn resolve_global_cache() {
 
     #[cfg(windows)]
-    let global_cache = "AppData\\Local\\Yarn\\Berry";
+    let global_cache = "AppData\\Local\\Yarn\\Berry\\cache";
     #[cfg(not(windows))]
     let global_cache = ".yarn/berry/cache";
 

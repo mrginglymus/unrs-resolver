@@ -172,21 +172,17 @@ fn resolve_npm_protocol_alias() {
     );
 }
 
-// Windows is blocked by upstream
-// see also https://github.com/yarnpkg/pnp-rs/pull/10
-#[cfg(not(windows))]
 #[test]
 fn resolve_global_cache() {
-    let home_dir = dirs::home_dir().unwrap();
 
     #[cfg(windows)]
-    let global_cache = home_dir.join("AppData\\Local\\Yarn\\Berry");
+    let global_cache = "AppData\\Local\\Yarn\\Berry";
     #[cfg(not(windows))]
-    let global_cache = home_dir.join(".yarn/berry/cache");
+    let global_cache = ".yarn/berry/cache";
 
     let fixture = super::fixture_root().join("global-pnp");
     let resolver = Resolver::new(ResolveOptions {
-        cwd: Some(fixture),
+        cwd: Some(fixture.clone()),
         yarn_pnp: true,
         ..ResolveOptions::default()
     });
@@ -194,18 +190,20 @@ fn resolve_global_cache() {
     assert_eq!(
         resolver
             .resolve(
-                global_cache
-                    .join("source-map-support-npm-0.5.21-09ca99e250-10c0.zip")
-                    .join("node_modules")
-                    .join("source-map-support")
-                    .join(""),
-                "source-map"
+                &fixture,
+                "vitest/config"
             )
             .map(|r| r.full_path()),
-        Ok(global_cache
-            .join("source-map-npm-0.6.1-1a3621db16-10c0.zip")
+        Ok(fixture
+            .join(".yarn")
+            .join("__virtual__")
+            .join("vitest-virtual-4db2b842d9")
+            .join("5")
+            .join(global_cache)
+            .join("vitest-npm-3.2.4-7a07f931b1-10c0.zip")
             .join("node_modules")
-            .join("source-map")
-            .join("source-map.js")),
+            .join("vitest")
+            .join("dist")
+            .join("config.js")),
     );
 }

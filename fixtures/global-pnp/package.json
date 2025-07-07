@@ -2,6 +2,6 @@
   "name": "global-pnp",
   "packageManager": "yarn@4.9.2",
   "dependencies": {
-    "source-map-support": "^0.5.21"
+    "vitest": "^3.2.4"
   }
 }
